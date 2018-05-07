@@ -1,0 +1,2 @@
+backups:
+    - ["/directory/to/backup/","/directory/where/backups/are/created/","name-of-backup-tar"]

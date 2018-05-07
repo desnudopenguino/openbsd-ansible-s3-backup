@@ -1,0 +1,55 @@
+---
+ - name: Create key
+   lineinfile:
+     create: yes
+     path: "/home/{{ ansible_user }}/.backup-key"
+     owner: "{{ ansible_user }}"
+     mode: 0600
+     line: "{{ enc_key }}"
+   tags:
+     - scripts
+     - create-key
+
+ - name: Upload backup script
+   template:
+     src: "backup-notify.j2"
+     dest: "/home/{{ ansible_user }}/bin/backup-notify"
+     owner: "{{ ansible_user }}"
+     mode: 0755
+   tags:
+     - scripts
+     - upload-scripts
+     - upload-backup-script
+
+ - name: Upload upload script
+   template:
+     src: "s3-upload-cron.j2"
+     dest: "/home/{{ ansible_user }}/bin/s3-upload-cron"
+     owner: "{{ ansible_user }}"
+     mode: 0755
+   tags:
+     - scripts
+     - upload-scripts
+     - upload-upload-scripts
+
+ - name: Initialize listeners
+   shell: "(nohup /home/{{ ansible_user }}/bin/backup-notify {{ item.0 }} {{ item.1 }} {{ item.2 }} &) &"
+   async: 1000
+   poll: 0
+   with_items:
+     - "{{ backups }}"
+   tags:
+     - scripts
+     - init-listeners
+
+ - name: Initialize cron for uploading backups
+   cron:
+     name: "Upload to s3"
+     minute: "0"
+     hour: "3"
+     job: "AWS_PROFILE=backup /home/{{ ansible_user }}/bin/s3-upload-cron {{ backup_location }}"
+     user: "{{ ansible_user }}"
+     state: present
+   tags:
+     - scripts
+     - init-cron

@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+for file in $1/*.gz2; do
+    filename=`basename $file`
+    AWS_PROFILE=backup aws s3 cp "$file" s3://{{ aws_s3_bucket }}/"$filename"
+    rm $file
+done

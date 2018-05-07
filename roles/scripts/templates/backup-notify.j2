@@ -1,0 +1,9 @@
+#! /usr/bin/env sh
+while inotifywait -r -o /home/{{ ansible_user }}/backup-notify.log -e modify -e moved_to -e create -e close_write $1; do
+    date=$(date +"%y-%m-%d")
+    fname="$3-$date.tar.gz"
+    fname2="$3-$date.tar.gz2"
+    tar zcvf $2$fname $1/*
+    openssl aes-256-cbc -k /home/{{ ansible_user }}/.backup-file -in $2$fname -out $2$fname2
+    rm $2$fname
+done

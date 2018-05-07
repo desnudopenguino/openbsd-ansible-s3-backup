@@ -1,0 +1,7 @@
+---
+ - name: Set up automatic backups
+   hosts: host
+   roles:
+     - install-pkgs
+     - { role: aws, user: "{{ ansible_user }}" }
+     - { role: scripts, user: "{{ ansible_user }}" }

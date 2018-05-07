@@ -1,0 +1,14 @@
+[host]
+<ip/host>
+
+[host:vars]
+ansible_python_interpreter=/usr/local/bin/python3.6
+ansible_user=<user name>
+ansible_become=true
+ansible_become_method=su
+enc_key=<some encryption string>
+aws_region=<your aws region>
+aws_access_key=<aws access key>
+aws_secret_key=<aws secret key>
+aws_s3_bucket=<s3 bucket name>
+backup_location=<location of backups to upload>

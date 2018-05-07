@@ -1,0 +1,16 @@
+---
+ - name: Install AWS CLI
+   openbsd_pkg:
+     name: awscli
+     state: present
+   tags:
+     - install-pkgs
+     - install-aws-cli
+
+ - name: Install inotify
+   openbsd_pkg:
+     name: inotify-tools
+     state: present
+   tags:
+     - install-pkgs
+     - install-inotify-tools
